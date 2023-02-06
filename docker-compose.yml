@@ -1,13 +1,13 @@
 version: "3.7"
 services:
   backend:
-    image: ${DOCKER_IMAGES_PREFIX}/backend:${PARCHIN_VERSION}
+    image: ${DOCKER_IMAGES_PREFIX}/backend:${DJANGO_REACT_TEMPLATE_VERSION}
     restart: unless-stopped
     build: backend/
     environment:
       - DJANGO_SETTINGS_MODULE
-      - PARCHIN_DB_URL=mongodb://database:27017
-      - PARCHIN_SECRET_KEY
+      - DJANGO_REACT_TEMPLATE_DB_URL=mongodb://database:27017
+      - DJANGO_REACT_TEMPLATE_SECRET_KEY
       - RECAPTCHA_SERVER_KEY
     volumes:
       - backend_static_files:/app/static/
@@ -24,7 +24,7 @@ services:
       - ./.db-data/:/data/db/
   frontend:
     build: ./frontend
-    image: ${DOCKER_IMAGES_PREFIX}/frontend:${PARCHIN_VERSION}
+    image: ${DOCKER_IMAGES_PREFIX}/frontend:${DJANGO_REACT_TEMPLATE_VERSION}
     environment:
       - API_BASE_URL
     volumes:
