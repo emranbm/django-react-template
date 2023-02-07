@@ -76,15 +76,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASE_URL = os.environ.get("DJANGO_REACT_TEMPLATE_DB_URL", "mongodb://localhost:27017")
-
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'DJANGO_REACT_TEMPLATE-db',
-        'CLIENT': {
-            'host': DATABASE_URL
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DJANGO_REACT_TEMPLATE_DB_NAME'),
+        'USER': os.environ.get('DJANGO_REACT_TEMPLATE_DB_USER'),
+        'PASSWORD': os.environ.get('DJANGO_REACT_TEMPLATE_DB_PASSWORD'),
+        'HOST': os.environ.get('DJANGO_REACT_TEMPLATE_DB_HOST'),
+        'PORT': os.environ.get('DJANGO_REACT_TEMPLATE_DB_PORT', '5432'),
+        'OPTIONS': {
+            'options': '-c search_path=' + os.environ.get('DJANGO_REACT_TEMPLATE_DB_SCHEMA', 'schema_name')
+        },
+        'TEST': {
+            'NAME': 'test_db',
+        },
     }
 }
 

@@ -6,9 +6,14 @@ services:
     build: backend/
     environment:
       - DJANGO_SETTINGS_MODULE
-      - DJANGO_REACT_TEMPLATE_DB_URL=mongodb://database:27017
       - DJANGO_REACT_TEMPLATE_SECRET_KEY
       - RECAPTCHA_SERVER_KEY
+      - DJANGO_REACT_TEMPLATE_DB_USER
+      - DJANGO_REACT_TEMPLATE_DB_PASSWORD
+      - DJANGO_REACT_TEMPLATE_DB_NAME
+      - DJANGO_REACT_TEMPLATE_DB_SCHEMA
+      - DJANGO_REACT_TEMPLATE_DB_HOST
+      - DJANGO_REACT_TEMPLATE_DB_PORT
     volumes:
       - backend_static_files:/app/static/
     ports:
@@ -16,12 +21,19 @@ services:
     depends_on:
       - database
   database:
-    image: mongo:5.0.9-focal
+    image: postgres:15.1-alpine
     restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=$DJANGO_REACT_TEMPLATE_DB_ROOT_PASSWORD
+      - DJANGO_REACT_TEMPLATE_DB_USER
+      - DJANGO_REACT_TEMPLATE_DB_PASSWORD
+      - DJANGO_REACT_TEMPLATE_DB_NAME
+      - DJANGO_REACT_TEMPLATE_DB_SCHEMA
     ports:
       - $DB_PORT_MAPPING
     volumes:
-      - ./.db-data/:/data/db/
+      - ./.db-data/:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
   frontend:
     build: ./frontend
     image: ${DOCKER_IMAGES_PREFIX}/frontend:${DJANGO_REACT_TEMPLATE_VERSION}
